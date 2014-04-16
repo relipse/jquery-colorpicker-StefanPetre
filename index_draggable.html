@@ -31,23 +31,23 @@
 
 </head>
 <body>
-    <div class="colorSelector">
+    <div class="colorSelector" id="cs1">
         <div class="inner" style="background-color: #0000ff"></div>
     </div>
     <br>
-    <div class="colorSelector">
+    <div class="colorSelector" id="cs2">
         <div class="inner" style="background-color: #0000ff"></div>
     </div>
      <br>   
-    <div class="colorSelector">
+    <div class="colorSelector" id="cs3">
         <div class="inner" style="background-color: #0000ff"></div>
     </div>
      <br>  
-         <div class="colorSelector">
+         <div class="colorSelector" id="cs4">
         <div class="inner" style="background-color: #0000ff"></div>
     </div>
      <br>  
-         <div class="colorSelector">
+         <div class="colorSelector" id="cs5">
         <div class="inner" style="background-color: #0000ff"></div>
     </div>
      <br>  
@@ -69,11 +69,16 @@ $('.colorSelector').ColorPicker({
     onChange: function (hsb, hex, rgb, callee) {
         var el = this.data('colorpicker').el;
         $(el).find('div.inner').css('backgroundColor', '#' + hex);
+        console.log('onChange');
+    },
+    onSubmit: function(){
+        console.log('onSubmit');
     }
+
 }).attr('draggable','true').on({
         dragstart: function(ev){
-            ev.originalEvent.dataTransfer.setData("Text",
-                $(this).attr('id'));
+            console.log(ev);
+            ev.originalEvent.dataTransfer.setData("Text", ev.currentTarget.id);
         },
         drop: function(ev){
             noconfirm = ev.ctrlKey;
@@ -82,18 +87,18 @@ $('.colorSelector').ColorPicker({
             var data = ev.originalEvent.dataTransfer.getData("Text");
 
             var $fromdiv = $('#'+data).find('div.inner');
-            console.log('Copying color from '); console.log($fromdiv[0]); 
-            console.log(' to: '); console.log(ev.target);
+            console.log('Copying color from: ', $fromdiv[0]); 
+            console.log(' to: ', ev.currentTarget);
             
-            var $targ = $(ev.target);
+            var $targ = $(ev.currentTarget);
             if (!$targ.hasClass('inner')){
                 $targ = $targ.find('div.inner');
             }
             var fromcolor = $targ.css('background-color');
             var tocolor = $fromdiv.css('background-color');
-            if (fromcolor != tocolor && (noconfirm || confirm("Copy color?"))){ // "+tocolor+' and overwrite '+ $targ.css('background-color'))){
+            if (fromcolor != tocolor && (noconfirm || confirm("Copy color and overwrite?"))){ 
                 $targ.css('background-color', tocolor);
-                $targ.parent().ColorPickerSetColor(tocolor);
+                $targ.parent('div').ColorPickerSetColor(tocolor, true);
             }
         },
         dragover: function(ev){
