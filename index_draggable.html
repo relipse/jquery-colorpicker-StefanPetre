@@ -56,6 +56,16 @@
      <div></div>
      </div>     
 <script>
+
+function rgbtohex(rgb){
+ rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+ return (rgb && rgb.length === 4) ? "#" +
+  ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+  ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+  ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : rgb;
+}
+
+
 $('.colorSelector').ColorPicker({
     color: '#0000ff',
     onShow: function (colpkr) {
@@ -97,8 +107,8 @@ $('.colorSelector').ColorPicker({
             var fromcolor = $targ.css('background-color');
             var tocolor = $fromdiv.css('background-color');
             if (fromcolor != tocolor && (noconfirm || confirm("Copy color and overwrite?"))){ 
-                $targ.css('background-color', tocolor);
-                $targ.parent('div').ColorPickerSetColor(tocolor, true);
+                $targ.css('background-color', rgbtohex(tocolor));
+                $targ.parent('div').ColorPickerSetColor(rgbtohex(tocolor));
             }
         },
         dragover: function(ev){
