@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <link rel="stylesheet" href="css/colorpicker.css" type="text/css" />
+    <title>ColorPicker - jQuery plugin</title>
+    <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="js/colorpicker.js"></script>
+    <script type="text/javascript" src="js/eye.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/layout.js?ver=1.0.2"></script>
+    <style>
+    div.colorSelector {
+        float: left;
+    }
+.colorSelector div {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 30px;
+    height: 30px;
+    background: url(images/select.png) center;
+}
+    .colorSelector {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            background: url(images/select.png);
+    }
+
+    </style>
+
+</head>
+<body>
+    <div class="colorSelector">
+        <div class="inner" style="background-color: #0000ff"></div>
+    </div>
+    <br>
+    <div class="colorSelector">
+        <div class="inner" style="background-color: #0000ff"></div>
+    </div>
+     <br>   
+    <div class="colorSelector">
+        <div class="inner" style="background-color: #0000ff"></div>
+    </div>
+     <br>  
+         <div class="colorSelector">
+        <div class="inner" style="background-color: #0000ff"></div>
+    </div>
+     <br>  
+         <div class="colorSelector">
+        <div class="inner" style="background-color: #0000ff"></div>
+    </div>
+     <br>  
+     
+     <div class="dropColor">
+     <div></div>
+     </div>     
+<script>
+$('.colorSelector').ColorPicker({
+    color: '#0000ff',
+    onShow: function (colpkr) {
+        $(colpkr).fadeIn(200);
+        return false;
+    },
+    onHide: function (colpkr) {
+        $(colpkr).fadeOut(200);
+        return false;
+    },
+    onChange: function (hsb, hex, rgb, callee) {
+        var el = this.data('colorpicker').el;
+        $(el).find('div.inner').css('backgroundColor', '#' + hex);
+    }
+}).attr('draggable','true').on({
+        dragstart: function(ev){
+            ev.originalEvent.dataTransfer.setData("Text",
+                $(this).attr('id'));
+        },
+        drop: function(ev){
+            noconfirm = ev.ctrlKey;
+
+            ev.preventDefault();
+            var data = ev.originalEvent.dataTransfer.getData("Text");
+
+            var $fromdiv = $('#'+data).find('div.inner');
+            console.log('Copying color from '); console.log($fromdiv[0]); 
+            console.log(' to: '); console.log(ev.target);
+            
+            var $targ = $(ev.target);
+            if (!$targ.hasClass('inner')){
+                $targ = $targ.find('div.inner');
+            }
+            var fromcolor = $targ.css('background-color');
+            var tocolor = $fromdiv.css('background-color');
+            if (fromcolor != tocolor && (noconfirm || confirm("Copy color?"))){ // "+tocolor+' and overwrite '+ $targ.css('background-color'))){
+                $targ.css('background-color', tocolor);
+                $targ.parent().ColorPickerSetColor(tocolor);
+            }
+        },
+        dragover: function(ev){
+            ev.preventDefault();
+        }
+    });
+    </script>
+</body>
+</html>
